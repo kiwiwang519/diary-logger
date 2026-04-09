@@ -3,7 +3,7 @@
 # 支持可扩展的标签系统
 # 用法: ./diary-logger.sh "用户消息"
 #
-# 标签格式: 记<标签名>:<内容> 或 记<标签名> <内容>
+# 标签格式: 记<标签名>: <内容> 或 记<标签名> <内容>
 # 示例:
 #   记工作: 今天完成了项目
 #   记生活 今天天气很好
@@ -56,7 +56,6 @@ TAG_DIR="$DIARY_BASE_DIR/$TAG_DIR_NAME"
 # 如果没有内容，说明只有标签，取剩余部分
 if [ -z "$CONTENT" ]; then
     CONTENT="${MESSAGE:$((${#TAG}+1))}"
-    # 去掉可能的前导分隔符
     CONTENT="${CONTENT#:}"
     CONTENT="${CONTENT# }"
 fi

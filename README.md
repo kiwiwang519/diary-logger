@@ -4,7 +4,7 @@
 
 ## 功能特性
 
-- **可扩展标签系统** - 使用 `记<标签>` 格式记录，支持任意自定义标签
+- **可扩展标签系统** - 使用 `diary <标签>` 格式记录，支持任意自定义标签
 - **完全本地存储** - 数据保存在本地文件，不上传任何服务器
 - **Markdown 格式** - 每日一个 `.md` 文件，方便阅读和编辑
 - **Claude Code 集成** - 可通过 hook 与 Claude Code 无缝配合
@@ -14,32 +14,32 @@
 ### 基础用法
 
 ```bash
-./diary-logger.sh "记工作: 今天完成了项目计划"
-./diary-logger.sh "记生活 今天天气很好"
-./diary-logger.sh "记思考 AI能教会吗？"
+./diary-logger.sh "diary work: 今天完成了项目计划"
+./diary-logger.sh "diary life 今天天气很好"
+./diary-logger.sh "diary think AI能教会吗？"
 ```
 
 ### 标签格式
 
 ```
-记<标签名>: <内容>
-记<标签名> <内容>
+diary <标签名>: <内容>
+diary <标签名> <内容>
 ```
 
 示例：
-- `记工作: 今天完成了项目` → 保存到 `work/YYYY-MM-DD.md`
-- `记生活 今天天气很好` → 保存到 `life/YYYY-MM-DD.md`
-- `记思考 AI能教会吗？` → 保存到 `think/YYYY-MM-DD.md`
+- `diary work: 今天完成了项目` → 保存到 `work/YYYY-MM-DD.md`
+- `diary life 今天天气很好` → 保存到 `life/YYYY-MM-DD.md`
+- `diary think AI能教会吗？` → 保存到 `think/YYYY-MM-DD.md`
 
 ### 输出格式
 
 ```markdown
 # 2026-04-09 日记
 
-## [14:30] #工作
+## [14:30] #work
 今天完成了项目计划
 
-## [15:00] #生活
+## [15:00] #life
 今天天气很好
 ```
 
@@ -51,8 +51,8 @@
 # 自定义日记存储根目录
 DIARY_BASE_DIR="$HOME/.claude/diaries"
 
-# 默认标签（可选）
-DEFAULT_TAG="work"
+# 自定义触发词（可选）
+TRIGGER_PREFIX="diary"
 ```
 
 ## 安装到 Claude Code
@@ -75,7 +75,7 @@ DEFAULT_TAG="work"
 ## 手动测试
 
 ```bash
-./diary-logger.sh "记工作: 这是一条测试日记"
+./diary-logger.sh "diary work: 这是一条测试日记"
 ```
 
 ## 目录结构
