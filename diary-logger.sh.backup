@@ -1,0 +1,54 @@
+#!/bin/bash
+# 日记记录脚本
+# 用法: ./diary-logger.sh "用户消息"
+
+set -e
+
+# 用户输入的消息
+MESSAGE="$1"
+
+# 如果没有消息，则退出
+if [ -z "$MESSAGE" ]; then
+    exit 0
+fi
+
+# 检查消息是否以「记工作」或「记生活」开头
+if [[ "$MESSAGE" != "记工作"* && "$MESSAGE" != "记生活"* ]]; then
+    exit 0
+fi
+
+# 确定日记类型和目录
+if [[ "$MESSAGE" == "记工作"* ]]; then
+    DIARY_TYPE="work"
+    DIARY_DIR="$HOME/.claude/diaries/work"
+else
+    DIARY_TYPE="life"
+    DIARY_DIR="$HOME/.claude/diaries/life"
+fi
+
+# 确保目录存在
+mkdir -p "$DIARY_DIR"
+
+# 获取当前日期和时间
+CURRENT_DATE=$(date +"%Y-%m-%d")
+CURRENT_TIME=$(date +"%H:%M")
+
+# 日记文件路径
+DIARY_FILE="$DIARY_DIR/$CURRENT_DATE.md"
+
+# 创建或追加到日记文件
+{
+    # 如果文件不存在或为空，添加日期标题
+    if [ ! -f "$DIARY_FILE" ] || [ ! -s "$DIARY_FILE" ]; then
+        echo "# $CURRENT_DATE 日记"
+        echo ""
+    fi
+
+    # 添加时间戳和消息
+    echo "## [$CURRENT_TIME]"
+    echo "$MESSAGE"
+    echo ""
+} >> "$DIARY_FILE"
+
+# 输出日志（可选）
+echo "日记已记录: $DIARY_TYPE/$CURRENT_DATE.md" >&2
