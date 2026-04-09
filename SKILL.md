@@ -1,38 +1,59 @@
 # 日记记录技能
 
-自动记录工作和生活日记到本地Markdown文件。
+自动记录日记到本地 Markdown 文件，支持可扩展的自定义标签。
 
 ## 功能
-当用户输入以「记工作」或「记生活」开头的消息时，自动将消息原文保存到对应的日记目录中，每天一个文件。
+当用户输入以「记」开头的内容时，自动将消息保存到对应的日记目录，每天一个文件。
+
+## 标签系统
+```
+记<标签名>: <内容>
+记<标签名> <内容>
+```
+
+示例：
+- `记工作: 今天完成了项目计划` → 保存到 `work/YYYY-MM-DD.md`
+- `记生活 今天天气很好` → 保存到 `life/YYYY-MM-DD.md`
+- `记思考 AI能教会吗？` → 保存到 `think/YYYY-MM-DD.md`
+
+标签名会自动转换为小写，目录会自动创建。
 
 ## 目录结构
-- 工作日记：`~/.claude/diaries/work/`
-- 生活日记：`~/.claude/diaries/life/`
-
-## 文件命名
-文件按日期命名，格式为 `YYYY-MM-DD.md`，例如 `2026-04-02.md`。
-
-## 记录格式
-在对应的日期文件中，追加以下格式的内容：
-```
-## [HH:MM]
-用户输入的消息原文
+可通过 `~/.claude/diary-config.sh` 自定义：
+```bash
+DIARY_BASE_DIR="$HOME/.claude/diaries"
 ```
 
-## 安装说明
-1. 确保 `~/.claude/diaries/` 目录存在
-2. 将本技能目录放置在 `~/.claude/skills/` 下
-3. 在 Claude Code 的 settings.json 中配置钩子（hook）以调用本技能
+默认：
+```
+~/.claude/diaries/
+├── work/
+├── life/
+└── <任意标签>/
+```
 
-## 钩子配置示例
-在 `settings.json` 中添加：
+## 文件格式
+```markdown
+# 2026-04-09 日记
+
+## [14:30] #工作
+今天完成了项目计划
+
+## [15:00] #生活
+今天天气很好
+```
+
+## 安装
+1. 将本技能目录放置在 `~/.claude/skills/diary-logger/`
+2. 在 Claude Code 的 `settings.json` 中配置 hook：
+
 ```json
 {
   "hooks": {
     "user-prompt-submit": [
       {
         "command": "bash",
-        "args": ["/Users/wanglexin/.claude/skills/diary-logger/diary-logger.sh", "{{prompt}}"]
+        "args": ["/path/to/diary-logger.sh", "{{prompt}}"]
       }
     ]
   }
@@ -40,8 +61,6 @@
 ```
 
 ## 手动测试
-可以运行测试脚本：
 ```bash
-cd ~/.claude/skills/diary-logger
-./diary-logger.sh "记工作 今天完成了项目计划"
+./diary-logger.sh "记工作: 这是一条测试日记"
 ```
